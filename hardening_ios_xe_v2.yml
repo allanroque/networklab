@@ -44,17 +44,25 @@
           - "snmp-server enable traps cpu threshold"
           - "process cpu threshold type {{ cpu_threshold_type }} rising {{ cpu_rising_percentage }} interval {{ cpu_threshold_interval }} falling {{ cpu_falling_percentage }} interval {{ cpu_threshold_interval }}"
 
-    - name: Configure NTP with Authentication
-     cisco.ios.ios_ntp_global:
-        server:
-          - name: "{{ ntp_server }}"
-            key_id: "{{ ntp_key_id }}"
-            prefer: true
-        authenticate: true
-        authentication_keys:
-          - id: "{{ ntp_key_id }}"
-            algorithm: md5
-            key: "{{ ntp_key }}"
-        trusted_key: "{{ ntp_key_id }}"
-
-
+    - name: Configurar NTP globalmente
+      cisco.ios.ios_ntp_global:
+        config:
+          authenticate: true
+          authentication_keys:
+            - id: 1
+              key: "minhaChaveSecreta"
+              encryption: 7  # Note que o tipo de algoritmo e a senha precisam ser definidos conforme o ambiente
+              algorithm: md5
+          peers:
+            - peer: "192.0.2.1"
+              version: 4
+              key_id: 1
+          servers:
+            - server: "192.0.2.2"
+              version: 4
+              key_id: 1
+          source: Loopback0
+          trusted_keys:
+            - range_start: 1
+              range_end: 1
+        state: merged
