@@ -18,6 +18,8 @@
     ntp_server: 172.16.1.5
     ntp_key_id: 5
     ntp_key: ciscotime
+    community_string: "suaStringDeComunidade"  # Defina sua string de comunidade SNMP aqui
+
 
   tasks:
     - name: Configure EXEC Timeout
@@ -50,12 +52,11 @@
 
 
     - name: Configure CPU Thresholding Notification
-      cisco.ios.ios_config:
+      ios_config:
         lines:
-          - snmp-server enable traps cpu threshold
-          - snmp-server host {{ ntp_server }} {{ community_string }} cpu
-          - process cpu threshold type {{ cpu_threshold_type }} rising {{ cpu_rising_percentage }} interval {{ cpu_threshold_interval }} falling {{ cpu_falling_percentage }} interval {{ cpu_threshold_interval }}
-          - process cpu statistics limit entry-percentage {{ cpu_rising_percentage }}
+          - "snmp-server enable traps cpu threshold"
+          - "snmp-server host {{ ntp_server }} {{ community_string }} cpu"
+          - "process cpu threshold type {{ cpu_threshold_type }} rising {{ cpu_rising_percentage }} interval {{ cpu_threshold_interval }} falling {{ cpu_falling_percentage }} interval {{ cpu_threshold_interval }}"
 
     - name: Configure Network Time Protocol (NTP)
       cisco.ios.ios_config:
