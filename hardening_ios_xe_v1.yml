@@ -42,11 +42,12 @@
         parents: interface Loopback0
 
     - name: Configure Memory Threshold Notifications
-      cisco.ios.ios_config:
+      ios_config:
         lines:
           - memory free low-watermark processor {{ memory_threshold_processor }}
-          - memory free low-watermark io {{ memory_threshold_io }}
+          # Removido a linha para configurar memory free low-watermark io
           - memory reserve critical {{ memory_reserve_critical }}
+
 
     - name: Configure CPU Thresholding Notification
       cisco.ios.ios_config:
