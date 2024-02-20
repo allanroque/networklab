@@ -71,4 +71,4 @@
           trusted_keys:
             - range_start: 1
               range_end: 1
-        state: merged
+        state: replaced
