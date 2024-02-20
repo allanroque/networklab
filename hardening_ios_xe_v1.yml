@@ -50,12 +50,16 @@
           # Removido a linha para configurar memory free low-watermark io
           - memory reserve critical {{ memory_reserve_critical }}
 
-
-    - name: Configure Network Time Protocol (NTP)
-      cisco.ios.ios_config:
-        lines:
-          - ntp authenticate
-          - ntp authentication-key {{ ntp_key_id }} md5 {{ ntp_key }}
-          - ntp trusted-key {{ ntp_key_id }}
-          - ntp server {{ ntp_server }} key {{ ntp_key_id }}
+    - name: Configure NTP with Authentication
+      ios_ntp_global:
+        server:
+          - name: "{{ ntp_server }}"
+            key_id: "{{ ntp_key_id }}"
+            prefer: true
+        authenticate: true
+        authentication_keys:
+          - id: "{{ ntp_key_id }}"
+            algorithm: md5
+            key: "{{ ntp_key }}"
+        trusted_key: "{{ ntp_key_id }}"
 
