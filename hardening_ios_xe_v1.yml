@@ -1,0 +1,66 @@
+---
+- name: Cisco IOS XE Hardening Configuration
+  hosts: cisco_devices
+  gather_facts: no
+  connection: network_cli
+  vars:
+    exec_timeout_min: 5
+    exec_timeout_sec: 0
+    loopback_ip: 192.168.1.1
+    loopback_mask: 255.255.255.0
+    memory_threshold_processor: 10
+    memory_threshold_io: 10
+    memory_reserve_critical: 5
+    cpu_threshold_type: both
+    cpu_rising_percentage: 80
+    cpu_falling_percentage: 60
+    cpu_threshold_interval: 60
+    ntp_server: 172.16.1.5
+    ntp_key_id: 5
+    ntp_key: ciscotime
+
+  tasks:
+    - name: Configure EXEC Timeout
+      cisco.ios.ios_config:
+        lines:
+          - exec-timeout {{ exec_timeout_min }} {{ exec_timeout_sec }}
+        parents: "{{ item }}"
+      loop:
+        - line con 0
+        - line vty 0 4
+
+    - name: Enable TCP Keepalives In and Out
+      cisco.ios.ios_config:
+        lines:
+          - service tcp-keepalives-in
+          - service tcp-keepalives-out
+
+    - name: Configure Management Loopback Interface
+      cisco.ios.ios_config:
+        lines:
+          - ip address {{ loopback_ip }} {{ loopback_mask }}
+        parents: interface Loopback0
+
+    - name: Configure Memory Threshold Notifications
+      cisco.ios.ios_config:
+        lines:
+          - memory free low-watermark processor {{ memory_threshold_processor }}
+          - memory free low-watermark io {{ memory_threshold_io }}
+          - memory reserve critical {{ memory_reserve_critical }}
+
+    - name: Configure CPU Thresholding Notification
+      cisco.ios.ios_config:
+        lines:
+          - snmp-server enable traps cpu threshold
+          - snmp-server host {{ ntp_server }} {{ community_string }} cpu
+          - process cpu threshold type {{ cpu_threshold_type }} rising {{ cpu_rising_percentage }} interval {{ cpu_threshold_interval }} falling {{ cpu_falling_percentage }} interval {{ cpu_threshold_interval }}
+          - process cpu statistics limit entry-percentage {{ cpu_rising_percentage }}
+
+    - name: Configure Network Time Protocol (NTP)
+      cisco.ios.ios_config:
+        lines:
+          - ntp authenticate
+          - ntp authentication-key {{ ntp_key_id }} md5 {{ ntp_key }}
+          - ntp trusted-key {{ ntp_key_id }}
+          - ntp server {{ ntp_server }} key {{ ntp_key_id }}
+

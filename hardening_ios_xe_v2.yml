@@ -1,0 +1,60 @@
+---
+- name: Cisco IOS XE Hardening Configuration with Specific Modules
+  hosts: cisco_devices
+  gather_facts: no
+  connection: network_cli
+
+  vars:
+    exec_timeout_min: 5
+    exec_timeout_sec: 0
+    memory_threshold_processor: 10
+    memory_threshold_io: 10
+    memory_reserve_critical: 5
+    cpu_threshold_type: both # For illustrative purposes; adjust based on actual module capabilities
+    cpu_rising_percentage: 80
+    cpu_falling_percentage: 60
+    cpu_threshold_interval: 60
+    ntp_server: 172.16.1.5
+    ntp_key_id: 5
+    ntp_key: ciscotime
+
+  tasks:
+    - name: Configure EXEC Timeout for console and vty lines
+      ios_config:
+        lines:
+          - exec-timeout {{ exec_timeout_min }} {{ exec_timeout_sec }}
+        parents: "{{ item }}"
+      loop:
+        - line con 0
+        - line vty 0 4
+
+    - name: Enable TCP Keepalives In and Out
+      ios_config:
+        lines:
+          - service tcp-keepalives-in
+          - service tcp-keepalives-out
+
+    - name: Configure Memory and CPU Threshold Notifications
+      ios_config:
+        lines:
+          - memory free low-watermark processor {{ memory_threshold_processor }}
+          - memory free low-watermark io {{ memory_threshold_io }}
+          - memory reserve critical {{ memory_reserve_critical }}
+          # Assuming hypothetical commands for CPU as there's no direct ios_* module for CPU thresholds
+          - "snmp-server enable traps cpu threshold"
+          - "process cpu threshold type {{ cpu_threshold_type }} rising {{ cpu_rising_percentage }} interval {{ cpu_threshold_interval }} falling {{ cpu_falling_percentage }} interval {{ cpu_threshold_interval }}"
+
+    - name: Configure NTP with Authentication
+      ios_ntp_global:
+        server:
+          - name: "{{ ntp_server }}"
+            key_id: "{{ ntp_key_id }}"
+            prefer: true
+        authenticate: true
+        authentication_keys:
+          - id: "{{ ntp_key_id }}"
+            algorithm: md5
+            key: "{{ ntp_key }}"
+        trusted_key: "{{ ntp_key_id }}"
+
+
