@@ -1,6 +1,6 @@
 ---
 - name: Cisco IOS XE Hardening Configuration
-  hosts: cisco_devices
+  hosts: cisco
   gather_facts: no
   connection: network_cli
   vars:
