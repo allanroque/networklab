@@ -45,7 +45,7 @@
           - "process cpu threshold type {{ cpu_threshold_type }} rising {{ cpu_rising_percentage }} interval {{ cpu_threshold_interval }} falling {{ cpu_falling_percentage }} interval {{ cpu_threshold_interval }}"
 
     - name: Configure NTP with Authentication
-      ios_ntp_global:
+     cisco.ios.ios_ntp_global:
         server:
           - name: "{{ ntp_server }}"
             key_id: "{{ ntp_key_id }}"
