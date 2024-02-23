@@ -52,7 +52,7 @@
 
 
     - name: Configurar logging para servidor syslog externo
-      cisco.ios.ios_logging:
+      cisco.ios.ios_logging_global:
         dest: syslog
         name: 192.0.2.15
         state: present
