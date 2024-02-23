@@ -55,7 +55,7 @@
       cisco.ios.ios_logging_global:
         dest: syslog
         name: 192.0.2.15
-        state: present
+        state: merged
 
     - name: Configurar o banner de login
       cisco.ios.ios_banner:
