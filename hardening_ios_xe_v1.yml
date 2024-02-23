@@ -50,13 +50,6 @@
           # Removido a linha para configurar memory free low-watermark io
           - memory reserve critical {{ memory_reserve_critical }}
 
-
-    - name: Configurar logging para servidor syslog externo
-      cisco.ios.ios_logging_global:
-        dest: syslog
-        name: 192.0.2.15
-        state: merged
-
     - name: Configurar o banner de login
       cisco.ios.ios_banner:
         banner: login
