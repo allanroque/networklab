@@ -57,3 +57,11 @@
         dest: syslog
         name: 192.0.2.15
         state: present
+
+    - name: Configurar o banner de login
+      cisco.ios.ios_banner:
+        banner: login
+        text: |
+          Atenção: Este sistema é restrito a autorizações específicas.
+          Seu uso pode ser monitorado e registrado.
+        state: present
