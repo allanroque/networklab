@@ -50,6 +50,13 @@
           # Removido a linha para configurar memory free low-watermark io
           - memory reserve critical {{ memory_reserve_critical }}
 
+
+    - name: Determinar se a configuração do NTP precisa ser atualizada
+      set_fact:
+        ntp_update_needed: "{{ 'true' if (ntp_current_config | json_query('authentication_keys[*].id')) | intersect(ntp_desired_config_keys) | length == 0 else 'false' }}"
+      vars:
+        ntp_desired_config_keys: ["1"] # IDs das chaves na configuração desejada
+
     - name: Configurar NTP globalmente
       cisco.ios.ios_ntp_global:
         config:
