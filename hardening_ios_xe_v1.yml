@@ -50,6 +50,12 @@
           # Removido a linha para configurar memory free low-watermark io
           - memory reserve critical {{ memory_reserve_critical }}
 
+    - name: Desabilitar ICMP Redirects na interface FastEthernet 0
+      cisco.ios.ios_config:
+        lines:
+          - no ip redirects
+        parents: interface FastEthernet0
+
     - name: Configurar o banner de login
       cisco.ios.ios_banner:
         banner: login
