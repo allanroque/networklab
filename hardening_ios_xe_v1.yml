@@ -58,3 +58,8 @@
     - name: job_id_{{ awx_job_id }}
       debug:
         var: awx_job_id
+
+    - name: send job_id
+      ansible.builtin.set_stats:
+        data:
+          job_id: "{{ awx_job_id }}"
