@@ -55,6 +55,6 @@
         banner: login
         state: absent
 
-    - name: job_id {{ awx_job_id }}
+    - name: job_id_{{ awx_job_id }}
       debug:
         var: awx_job_id
