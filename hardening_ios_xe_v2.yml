@@ -52,3 +52,8 @@
           - ntp authentication-key {{ ntp_key_id }} md5 {{ ntp_key }}
           - ntp trusted-key {{ ntp_key_id }}
 
+    - name: Configurar logging para servidor syslog externo
+      cisco.ios.ios_logging:
+        dest: syslog
+        name: 192.0.2.15
+        state: present
