@@ -1,0 +1,36 @@
+host: https://student1.wblcm.example.opentlc.com/ #Change
+username: admin
+password: xxxxxx #Change
+
+
+templates:
+  - name: Backup network configurations
+    project: Workshop Project
+    inventory: Workshop Inventory
+    playbook: playbooks/network_backup.yml
+    credentials: 
+    - Workshop Credential
+    - Controller Credential
+    execution_environment: Default execution environment
+  - name: Network Automation - Restore 
+    project: Workshop Project
+    inventory: Workshop Inventory
+    playbook: playbooks/network_restore.yml
+    credentials: Workshop Credential
+    execution_environment: Default execution environment
+  
+  - name: Network-Banner
+    project: Workshop Project
+    inventory: Workshop Inventory
+    playbook: playbooks/network_banner.yml
+    credentials: Workshop Credential
+    execution_environment: Default execution environment
+    
+  
+  
+  
+  
+ 
+    
+ 
+
