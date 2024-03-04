@@ -77,7 +77,12 @@
     - name: capture_change
       listen: "capture_change"
       set_fact:
-        change_report: "{{ change_report + [{'job_id': awx_job_id | default('N/A'), 'host': inventory_hostname, 'task': ansible_current_task_name, 'changed': true}] }}"
+        change_report: "{{ change_report + [{'job_id': awx_job_id | default('N/A'), 'host': inventory_hostname, 'task': taks, 'changed': true}] }}"
+
+    - name: capture_change
+      set_fact:
+        change_report: "{{ change_report + [{'job_id': awx_job_id | default('N/A'), 'host': inventory_hostname, 'task': task_name, 'changed': true}] }}"
+
 
 
     - name: Criar diretório /report
