@@ -39,6 +39,18 @@
       register: job_events
       when: changes_count | int > 0
 
-    - name: debug
+
+    - name: Get job stdout from API
+      uri:
+        url: "https://student1.gr5j5.example.opentlc.com/api/v2/jobs/{{ job_id }}/stdout/?format=json"
+        method: GET
+        return_content: yes
+        headers:
+          Content-Type: "application/json"
+          Authorization: "Bearer {{ ac_token }}"
+      register: job_stdout
+      when: changes_count | int > 0
+
+    - name: get stdout
       debug:
-        var: job_events | json
+        var: job_stdout
