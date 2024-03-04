@@ -37,12 +37,12 @@
           Content-Type: "application/json"
           Authorization: "Bearer {{ ac_token }}"
       register: job_events
-      when: changes_count > 0
+      when: changes_count | int > 0
 
     - name: Set filtered events
       set_fact:
         filtered_events: "{{ job_events.json.results | selectattr('event', 'equalto', 'runner_item_on_ok') | selectattr('changed', 'equalto', true) | list }}"
-      when: changes_count > 0
+      when: changes_count | int > 0
 
     - name: Display each filtered event
       debug:
