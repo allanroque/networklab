@@ -86,3 +86,4 @@
     - name: test 
       debug:
         var: change_report
+      run_once: yes
