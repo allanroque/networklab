@@ -37,7 +37,7 @@
           Content-Type: "application/json"
           Authorization: "Bearer {{ ac_token }}"
       register: job_events
-      when: changes_count > 0
+      when: changes_count | int > 0
 
     - name: Set filtered events
       set_fact:
@@ -51,4 +51,4 @@
           - stdout: "{{ item.stdout | regex_replace('\\u001b\\[[0-9;]*m', '') }}"
           - host: "{{ item.host_name }}"
       loop: "{{ filtered_events }}"
-      when: changes_count > 0
+      changes_count | int > 0
