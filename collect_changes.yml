@@ -38,34 +38,3 @@
           Authorization: "Bearer {{ ac_token }}"
       register: job_events
       when: changes_count | int > 0
-
-    - name: Set filtered events
-      set_fact:
-        filtered_events: "{{ job_events.json.results | selectattr('event', 'equalto', 'runner_item_on_ok') | selectattr('changed', 'equalto', true) | list }}"
-      when: changes_count > 0
-
-
-    - name: Display each filtered event
-      debug:
-        msg: 
-          - task: "{{ item.task }}"
-          - changed: "{{ item.changed }}"
-          - stdout: "{{ item.stdout | regex_replace('\\u001b\\[[0-9;]*m', '') }}"
-          - host: "{{ item.host_name }}"
-      loop: "{{ filtered_events }}"
-      when: filtered_events is defined and filtered_events | length > 0
-      register: display_filtered_event
-
-
-    - name: Display each filtered event
-      debug:
-        msg: "{{ item.task }}, Changed: {{ item.changed }}, Stdout: {{ item.stdout }}, Host: {{ item.host }}"
-      loop: "{{ filtered_events }}"
-      when: filtered_events | length > 0
-
-
-    - name: Display hosts with changes
-      debug:
-        msg: "Host {{ item.host }} apresentou mudanças."
-      loop: "{{ filtered_events }}"
-      when: item.changed == true
