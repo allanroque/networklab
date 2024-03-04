@@ -80,5 +80,5 @@
   handlers:
     - name: capture_change
       set_fact:
-        change_report: "{{ change_report + [{'host': inventory_hostname, 'task': tasks, 'changed': true}] }}"
+        change_report: "{{ change_report + [{'host': inventory_hostname, 'task': ansible_play_name, 'changed': true}] }}"
       listen: "capture_change"
