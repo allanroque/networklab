@@ -1,0 +1,25 @@
+---
+- name: Create incident 
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: Create incident importantapp
+    servicenow.itsm.incident:
+      state: new
+      short_description: "Diferença de configuração detectada"
+      description:  "A automação identificou uma diferença na configuração importante nos equipamentos de rede."
+      impact: high
+      urgency: high 
+    register: incident
+    check_mode: false
+
+  - name: set stats for incident
+    set_stats:
+      data:
+        incident_record_number: "{{ incident.record.number }}"
+
+  - name: debug for incident
+    debug:
+      msg: 
+        - "{{ incident }}"
+        - "{{ incident.record.number }}"
