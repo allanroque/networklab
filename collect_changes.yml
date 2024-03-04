@@ -55,13 +55,13 @@
         var: job_stdout.content
 
     - name: Create incident importantapp
-     servicenow.itsm.incident:
-       state: new
-       short_description: "Diferença de configuração detectada"
-       description:  "A automação identificou uma diferença na configuração importante nos equipamentos de rede. Para mais detalhes sobre o Job acesso https://student1.gr5j5.example.opentlc.com/#/jobs/playbook/{{ job_id }}/output"
-       impact: high
-       urgency: high 
-     register: incident
+      servicenow.itsm.incident:
+        state: new
+        short_description: "Diferença de configuração detectada"
+        description:  "A automação identificou uma diferença na configuração importante nos equipamentos de rede. Para mais detalhes sobre o Job acesso https://student1.gr5j5.example.opentlc.com/#/jobs/playbook/{{ job_id }}/output"
+        impact: high
+        urgency: high 
+      register: incident
 
     - name: set stats for incident
       set_stats:
