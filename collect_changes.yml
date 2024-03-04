@@ -39,14 +39,11 @@
       register: job_events
       when: changes_count | int > 0
 
-    - name: Debug job_events.json.results
-      debug:
-        var: job_events.json.results
-
     - name: Set filtered events
       set_fact:
-        filtered_events: "{{ job_events.json.results | selectattr('event', 'equalto', 'runner_on_ok') | list }}"
+        filtered_events: "{{ job_events.json.results | selectattr('event', 'equalto', 'runner_on_ok') | selectattr('event_data.res.changed', 'equalto', true) | map(attribute='event_data') | map('extract', ['task', 'changed', 'stdout', 'host']) | list }}"
       when: changes_count | int > 0
+
 
     - name: Display each filtered event
       debug:
@@ -62,3 +59,4 @@
     - name: debug
       debug:
         var: display_filtered_event
+      when: filtered_events is defined and filtered_events | length > 0
