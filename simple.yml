@@ -1,0 +1,18 @@
+---
+- name: Unstructured
+  hosts: cisco
+  gather_facts: false
+
+  # One or More Tasks of a Play
+  tasks:
+    - name: IOS Commands
+      cisco.ios.ios_command:
+        commands: 
+          - show ip route
+          - show ip interface brief
+        
+      register: output
+
+    - name: Print Commands
+      ansible.builtin.debug:
+        var: output.stdout_lines

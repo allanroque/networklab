@@ -1,6 +1,6 @@
 ---
 - name: Configure SNMP on Cisco IOS XE managed nodes
-  hosts: ios
+  hosts: cisco
   gather_facts: false
   tasks:
     - name: Configure SNMP using the snmp_server resource module
