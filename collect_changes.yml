@@ -1,10 +1,10 @@
 ---
 - name: Obter e armazenar o número de changes de um job no Ansible Automation Controller
   hosts: localhost
-  gather_facts: no
+  gather_facts: False
   vars:
     job_id:  # essa informacao vem do playbook de hardening
-    ac_token: 
+    ac_token:
   tasks:
     - name: Obter detalhes do job do Ansible Automation Controller
       uri:
