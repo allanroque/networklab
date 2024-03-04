@@ -38,3 +38,7 @@
           Authorization: "Bearer {{ ac_token }}"
       register: job_events
       when: changes_count | int > 0
+
+    - name: debug
+      debug:
+        var: job_events | json
