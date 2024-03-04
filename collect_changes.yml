@@ -55,5 +55,10 @@
           - changed: "{{ item.changed }}"
           - stdout: "{{ item.stdout | regex_replace('\\u001b\\[[0-9;]*m', '') }}"
           - host: "{{ item.host_name }}"
-      loop: "{{ filtered_events.msg }}"
+      loop: "{{ filtered_events }}"
       when: filtered_events is defined and filtered_events | length > 0
+      register: display_filtered_event
+
+    - name: debug
+      debug:
+        var: display_filtered_event
