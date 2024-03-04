@@ -81,7 +81,7 @@
 
     - name: test 
       debug:
-        var: test22222
+        var: change_report
       run_once: yes
 
   handlers:
