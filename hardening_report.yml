@@ -33,8 +33,6 @@
       changed_when: exec_timeout_result.changed
       notify: capture_change
 
-    - meta: flush_handlers
-
     - name: Enable TCP Keepalives In and Out
       cisco.ios.ios_config:
         lines:
@@ -43,8 +41,6 @@
       register: tcp_keepalives_result
       changed_when: tcp_keepalives_result.changed
       notify: capture_change
-
-    - meta: flush_handlers
 
     - name: Configure Management Loopback Interface
       cisco.ios.ios_config:
@@ -55,8 +51,6 @@
       changed_when: loopback_config_result.changed
       notify: capture_change
 
-    - meta: flush_handlers
-
     - name: Configure Memory Threshold Notifications
       cisco.ios.ios_config:
         lines:
@@ -65,8 +59,6 @@
       register: memory_threshold_result
       changed_when: memory_threshold_result.changed
       notify: capture_change
-
-    - meta: flush_handlers
 
     - name: Configurar o banner de login
       cisco.ios.ios_banner:
@@ -80,8 +72,6 @@
       register: banner_config_result
       changed_when: banner_config_result.changed
       notify: capture_change
-
-    - meta: flush_handlers
 
     - name: test111111
       debug:
