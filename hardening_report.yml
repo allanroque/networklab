@@ -77,7 +77,7 @@
   handlers:
     - name: capture_change
       set_fact:
-        change_report: "{{ change_report + [{'host': inventory_hostname, 'task': ansible_current_task.name, 'changed': true}] }}"
+        change_report: "{{ change_report + [{'host': inventory_hostname, 'task': play.name, 'changed': true}] }}"
       listen: "capture_change"
 
     - name: Criar diretório /report
