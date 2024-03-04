@@ -1,0 +1,88 @@
+---
+- name: Cisco IOS XE Hardening Configuration
+  hosts: cisco
+  gather_facts: no
+  connection: network_cli
+  vars:
+    exec_timeout_min: 5
+    exec_timeout_sec: 0
+    loopback_ip: 192.168.1.1
+    loopback_mask: 255.255.255.0
+    memory_threshold_processor: 10
+    memory_threshold_io: 10
+    memory_reserve_critical: 5
+    cpu_threshold_type: both
+    cpu_rising_percentage: 80
+    cpu_falling_percentage: 60
+    cpu_threshold_interval: 60
+    ntp_server: 172.16.1.5
+    ntp_key_id: 5
+    ntp_key: ciscotime
+    community_string: "suaStringDeComunidade"  # Defina sua string de comunidade SNMP aqui
+    change_report: []
+  tasks:
+    - name: Configure EXEC Timeout
+      cisco.ios.ios_config:
+        lines:
+          - exec-timeout 10 0
+        parents: "{{ item }}"
+      loop:
+        - line con 0
+        - line vty 0 4
+      register: exec_timeout_result
+      changed_when: exec_timeout_result.changed
+      notify: capture_change
+
+    - name: Enable TCP Keepalives In and Out
+      cisco.ios.ios_config:
+        lines:
+          - service tcp-keepalives-in
+          - service tcp-keepalives-out
+      register: tcp_keepalives_result
+      changed_when: tcp_keepalives_result.changed
+      notify: capture_change
+
+    - name: Configure Management Loopback Interface
+      cisco.ios.ios_config:
+        lines:
+          - ip address {{ loopback_ip }} {{ loopback_mask }}
+        parents: interface Loopback0
+      register: loopback_config_result
+      changed_when: loopback_config_result.changed
+      notify: capture_change
+
+    - name: Configure Memory Threshold Notifications
+      cisco.ios.ios_config:
+        lines:
+          - memory free low-watermark processor {{ memory_threshold_processor }}
+          - memory reserve critical {{ memory_reserve_critical }}
+      register: memory_threshold_result
+      changed_when: memory_threshold_result.changed
+      notify: capture_change
+
+    - name: Configurar o banner de login
+      cisco.ios.ios_banner:
+        banner: login
+        text: |
+          ****************************************************************
+          * Authorized Access Only!                                      *
+          * This system is monitored and violations will be prosecuted.  *
+          ****************************************************************
+        state: present
+      register: banner_config_result
+      changed_when: banner_config_result.changed
+      notify: capture_change
+
+  handlers:
+    - name: capture_change
+      listen: "capture_change"
+      set_fact:
+        change_report: "{{ change_report + [{'job_id': awx_job_id | default('N/A'), 'host': inventory_hostname, 'task': ansible_current_task_name, 'changed': true}] }}"
+
+    - name: Write change report to a file
+      delegate_to: ansible-1
+      run_once: true
+      copy:
+        dest: "./change_report.yml"
+        content: "{{ change_report | to_nice_yaml }}"
+      listen: "capture_change"

@@ -1,0 +1,33 @@
+---
+- name: Ensure NTP Configuration is Compliant
+  hosts: cisco
+  gather_facts: no
+  vars:
+    ntp_ios:
+      servers:
+        - name: 0.pool.ntp.org
+          prefer: true
+        - name: 1.pool.ntp.org
+      authenticate: true
+      authentication_key:
+        - id: 1
+          algorithm: md5
+          key: your_secret_key
+      source_interface: Loopback0
+      trusted_key:
+        - id: 1
+
+  tasks:
+    - name: Check/Replace existing NTP configuration for compliance
+      cisco.ios.ios_ntp_global:
+        config: "{{ ntp_ios }}"
+        state: replaced
+      register: ntp_diff
+
+    - name: Display NTP Configuration Changes
+      ansible.builtin.debug:
+        msg:
+          - "Current NTP config:"
+          - "{{ ntp_diff.before }}"
+          - "Replace commands (remediation):"
+          - "{{ ntp_diff.commands | default('No diff found') }}"
