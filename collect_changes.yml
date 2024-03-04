@@ -51,4 +51,4 @@
           - stdout: "{{ item.stdout | regex_replace('\\u001b\\[[0-9;]*m', '') }}"
           - host: "{{ item.host_name }}"
       loop: "{{ filtered_events }}"
-      changes_count | int > 0
+      when: changes_count | int > 0
