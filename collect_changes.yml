@@ -44,6 +44,11 @@
         filtered_events: "{{ job_events.json.results | selectattr('event', 'equalto', 'runner_on_ok') | selectattr('event_data.res.changed', 'equalto', true) | map(attribute='event_data') | map('extract', ['task', 'changed', 'stdout', 'host']) | list }}"
       when: changes_count | int > 0
 
+    - name: Display each filtered event
+      debug:
+        msg: "{{ item.task }}, Changed: {{ item.changed }}, Stdout: {{ item.stdout }}, Host: {{ item.host }}"
+      loop: "{{ filtered_events }}"
+      when: filtered_events | length > 0
 
     - name: Display each filtered event
       debug:
