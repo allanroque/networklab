@@ -50,11 +50,6 @@
       register: job_stdout
       when: changes_count | int > 0
 
-    - name: Parse JSON content
-      set_fact:
-        job_stdout_parsed: "{{ job_stdout.json.content | from_json }}"
-
-
     - name: get stdout
       debug:
-        var: job_stdout
+        var: job_stdout.content | from_json
