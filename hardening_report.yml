@@ -89,7 +89,7 @@
     - name: Generate Change Report
       template:
         src: change_report.j2
-        dest: "/report/change_report_{{ ansible_date_time.iso8601 }}.txt"
+        dest: "/report/change_report_{{ awx_job_id }}.txt"
       listen: "capture_change"
       delegate_to: ansible-1
       run_once: true
