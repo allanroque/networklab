@@ -73,12 +73,12 @@
       changed_when: banner_config_result.changed
       notify: capture_change
 
-    - name: test 
-      debug:
-        var: capture_change
-
   handlers:
     - name: capture_change
       set_fact:
         change_report: "{{ change_report + [{'host': inventory_hostname, 'task': ansible_play_name, 'changed': true}] }}"
       listen: "capture_change"
+
+    - name: test 
+      debug:
+        var: capture_change
