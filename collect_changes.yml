@@ -53,6 +53,7 @@
     - name: Debug parsed content
       debug:
         var: job_stdout.content
+      when: changes_count | int > 0
 
     - name: Create incident importantapp
       servicenow.itsm.incident:
@@ -66,14 +67,17 @@
         impact: high
         urgency: high 
       register: incident
+      when: changes_count | int > 0
 
     - name: set stats for incident
       set_stats:
         data:
           incident_record_number: "{{ incident.record.number }}"
+      when: changes_count | int > 0
 
     - name: debug for incident
       debug:
         msg: 
           - "{{ incident }}"
           - "{{ incident.record.number }}"
+      when: changes_count | int > 0
