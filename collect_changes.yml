@@ -50,14 +50,6 @@
       register: job_stdout
       when: changes_count | int > 0
 
-    - name: Replace escaped newlines with actual newlines
-      set_fact:
-        job_stdout_content: "{{ job_stdout.json.content | regex_replace('\n', '\\n') }}"
-
-    - name: Parse JSON content
-      set_fact:
-        job_stdout_parsed: "{{ job_stdout_content | from_json }}"
-
     - name: Debug parsed content
       debug:
-        var: job_stdout_parsed
+        var: job_stdout.content
