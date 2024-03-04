@@ -1,7 +1,7 @@
 ---
 - name: Cisco IOS XE Hardening Configuration
   hosts: cisco
-  gather_facts: no
+  gather_facts: yes
   connection: network_cli
   vars:
     exec_timeout_min: 5
@@ -91,7 +91,7 @@
         src: change_report.j2
         dest: "/report/change_report_{{ ansible_date_time.iso8601 }}.txt"
       listen: "capture_change"
-      delegate_to: localhost
+      delegate_to: ansible-1
       run_once: true
 
     - name: Write change report to a file
