@@ -57,6 +57,11 @@
         banner: login
         state: absent
 
+
+    - name: debug
+      debug:
+        var: awx_job_id
+
     - name: send job_id var
       ansible.builtin.set_stats:
         data:
