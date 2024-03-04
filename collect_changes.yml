@@ -43,10 +43,10 @@
       debug:
         var: job_events.json.results
 
-    - name: Set filtered events
-      set_fact:
-        filtered_events: "{{ job_events.json.results | selectattr('event', 'equalto', 'runner_item_on_ok') | selectattr('changed', 'equalto', true) | list }}"
-      when: changes_count | int > 0
+- name: Set filtered events
+  set_fact:
+    filtered_events: "{{ job_events.json.results | selectattr('event', 'equalto', 'runner_on_ok') | list }}"
+  when: changes_count | int > 0
 
     - name: Display each filtered event
       debug:
