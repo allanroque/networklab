@@ -82,3 +82,7 @@
     - name: test 
       debug:
         var: capture_change
+
+    - name: test 
+      debug:
+        var: change_report
