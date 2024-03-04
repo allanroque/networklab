@@ -3,7 +3,7 @@
   hosts: localhost
   gather_facts: no
   vars:
-    job_id: 85  # Defina o ID do job aqui
+    job_id:  # essa informacao vem do playbook de hardening
     ac_token: 
   tasks:
     - name: Obter detalhes do job do Ansible Automation Controller

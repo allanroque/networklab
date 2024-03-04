@@ -24,12 +24,11 @@
     - name: Configure EXEC Timeout
       cisco.ios.ios_config:
         lines:
-          - exec-timeout {{ exec_timeout_min }} {{ exec_timeout_sec }}
-        parents: "{{ item }}"
-      loop:
-        - line con 0
-        - line vty 0 4
-
+          - "line con 0"
+          - "exec-timeout {{ exec_timeout_min }} {{ exec_timeout_sec }}"
+          - "line vty 0 4"
+          - "exec-timeout {{ exec_timeout_min }} {{ exec_timeout_sec }}"
+          
     - name: Enable TCP Keepalives In and Out
       cisco.ios.ios_config:
         lines:
@@ -54,11 +53,7 @@
         banner: login
         state: absent
 
-    - name: job_id_{{ awx_job_id }}
-      debug:
-        var: awx_job_id
-
-    - name: send job_id
+    - name: send job_id var
       ansible.builtin.set_stats:
         data:
           job_id: "{{ awx_job_id }}"
