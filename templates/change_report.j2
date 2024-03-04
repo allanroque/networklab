@@ -1,0 +1,7 @@
+Job ID: {{ awx_job_id | default('N/A') }}
+Change Report:
+{% for item in change_report %}
+- Host: {{ item.host }}
+  Task: {{ item.task }}
+  Changed: {{ item.changed }}
+{% endfor %}

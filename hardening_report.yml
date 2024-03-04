@@ -73,23 +73,26 @@
       changed_when: banner_config_result.changed
       notify: capture_change
 
+
   handlers:
     - name: capture_change
+      set_fact:
+        change_report: "{{ change_report + [{'host': inventory_hostname, 'task': ansible_current_task.name, 'changed': true}] }}"
       listen: "capture_change"
-      set_fact:
-        change_report: "{{ change_report + [{'job_id': awx_job_id | default('N/A'), 'host': inventory_hostname, 'task': taks, 'changed': true}] }}"
-
-    - name: capture_change
-      set_fact:
-        change_report: "{{ change_report + [{'job_id': awx_job_id | default('N/A'), 'host': inventory_hostname, 'task': task_name, 'changed': true}] }}"
-
-
 
     - name: Criar diretório /report
       ansible.builtin.file:
         path: /report
         state: directory
         mode: '0755'
+
+    - name: Generate Change Report
+      template:
+        src: change_report.j2
+        dest: "/report/change_report_{{ ansible_date_time.iso8601 }}.txt"
+      listen: "capture_change"
+      delegate_to: localhost
+      run_once: true
 
     - name: Write change report to a file
       delegate_to: ansible-1
