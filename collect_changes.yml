@@ -1,10 +1,9 @@
----
 - name: Obter e armazenar o número de changes de um job no Ansible Automation Controller
   hosts: localhost
   gather_facts: False
   vars:
-    job_id:  # essa informacao vem do playbook de hardening
-    ac_token:
+    job_id: "{{ job_id }}"  # essa informacao vem do playbook de hardening
+    ac_token: "{{ ac_token }}"
   tasks:
     - name: Obter detalhes do job do Ansible Automation Controller
       uri:
@@ -19,17 +18,15 @@
 
     - name: Armazenar o número de changes
       set_fact:
-        changes_count: "{{ job_details.json.host_status_counts.changed | default(0) }}"
+        changes_count: "{{ job_details.json.host_status_counts.changed | default(0) | int }}"
 
     - name: Mostrar o número de changes
       debug:
         msg: "O número de changes é {{ changes_count }}."
 
-
     - name: detalhes do job
       debug:
         msg: "Para mais detalhes sobre o Job acesso https://student1.gr5j5.example.opentlc.com/#/jobs/playbook/{{ job_id }}/output"
-
 
     - name: Get job events from API
       uri:
