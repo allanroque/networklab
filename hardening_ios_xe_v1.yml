@@ -68,3 +68,5 @@
           job_id: "{{ awx_job_id }}"
       run_once: True
       delegate_to: localhost
+
+      
