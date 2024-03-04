@@ -79,10 +79,17 @@
       set_fact:
         change_report: "{{ change_report + [{'job_id': awx_job_id | default('N/A'), 'host': inventory_hostname, 'task': ansible_current_task_name, 'changed': true}] }}"
 
+
+    - name: Criar diretório /report
+      ansible.builtin.file:
+        path: /report
+        state: directory
+        mode: '0755'
+
     - name: Write change report to a file
       delegate_to: ansible-1
       run_once: true
       copy:
-        dest: "./change_report.yml"
+        dest: "/report/{{ awx_job_id_}}change_report.yml"
         content: "{{ change_report | to_nice_yaml }}"
       listen: "capture_change"
