@@ -1,0 +1,27 @@
+---
+- name: Coletar informações de subscrição dos servidores
+  hosts: all
+  tasks:
+    - name: Coletar informações de subscrição consumida
+      ansible.builtin.shell: |
+        subscription-manager list --consumed | egrep 'Product Name:|Product ID:|Version:|Arch:|Status:|Starts:|Ends:'
+      register: subscription_info
+
+    - name: Filtrar informações relevantes
+      ansible.builtin.lineinfile:
+        path: "/tmp/subscription_info_{{ inventory_hostname }}.txt"
+        line: "{{ item }}"
+        create: yes
+      loop: "{{ subscription_info.stdout_lines }}"
+
+    - name: Coletar e salvar informações localmente
+      ansible.builtin.fetch:
+        src: "/tmp/subscription_info_{{ inventory_hostname }}.txt"
+        dest: "./collected_subscriptions/{{ inventory_hostname }}_subscription_info.txt"
+        flat: yes
+        
+    - name: Transferir arquivos de informações de subscrição para o servidor web01
+      ansible.builtin.synchronize:
+        src: "/tmp/subscription_info_{{ inventory_hostname }}.txt"
+        dest: "/var/www/html/subscriptions/subscription_info_{{ inventory_hostname }}.txt"
+        delegate_to: web01
