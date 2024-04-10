@@ -34,3 +34,12 @@
         src: "/tmp/subscription_info_{{ inventory_hostname }}.txt"
         dest: "root@web01.aroque.com.br:/var/www/html/subscriptions/subscription_info_{{ inventory_hostname }}.txt"
         mode: push
+
+- name: Transferir arquivos de informações de subscrição para o servidor web01
+  hosts: web01
+  tasks:
+    - name: Copiar arquivos de subscrição para o servidor web01
+      ansible.builtin.copy:
+        src: "./collected_subscriptions/subscription_info_{{ hostvars[item].inventory_hostname }}.txt"
+        dest: "/var/www/html/subscriptions/subscription_info_{{ hostvars[item].inventory_hostname }}.txt"
+      loop: "{{ groups['all'] }}"
