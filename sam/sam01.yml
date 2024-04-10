@@ -30,7 +30,7 @@
         flat: yes
 
 - name: Transferir arquivos de informações de subscrição para o servidor web01
-  hosts: web01
+  hosts: web01.aroque.com.br
   tasks:
     - name: Copiar arquivos de subscrição para o servidor web01
       ansible.builtin.copy:
