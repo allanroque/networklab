@@ -32,5 +32,5 @@
     - name: Transferir arquivos de informações de subscrição para o servidor web01
       ansible.builtin.synchronize:
         src: "/tmp/subscription_info_{{ inventory_hostname }}.txt"
-        dest: "/var/www/html/subscriptions/subscription_info_{{ inventory_hostname }}.txt"
-        delegate_to: web01.aroque.com.br
+        dest: "root@web01:/var/www/html/subscriptions/subscription_info_{{ inventory_hostname }}.txt"
+        mode: push
