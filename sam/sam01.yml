@@ -6,6 +6,14 @@
       ansible.builtin.shell: |
         subscription-manager list --consumed | egrep 'Product Name:|Product ID:|Version:|Arch:|Status:|Starts:|Ends:'
       register: subscription_info
+      ignore_errors: yes
+
+    - name: Verificar falha e marcar como Não Registrado
+      ansible.builtin.lineinfile:
+        path: "/tmp/subscription_info_{{ inventory_hostname }}.txt"
+        line: "Hostname: {{ inventory_hostname }}\nVersão do RedHat: Não disponível\nStatus: Não Registrado"
+        create: yes
+      when: subscription_info.rc != 0
 
     - name: Filtrar informações relevantes
       ansible.builtin.lineinfile:
@@ -13,15 +21,16 @@
         line: "{{ item }}"
         create: yes
       loop: "{{ subscription_info.stdout_lines }}"
+      when: subscription_info.rc == 0
 
     - name: Coletar e salvar informações localmente
       ansible.builtin.fetch:
         src: "/tmp/subscription_info_{{ inventory_hostname }}.txt"
         dest: "./collected_subscriptions/{{ inventory_hostname }}_subscription_info.txt"
         flat: yes
-        
+
     - name: Transferir arquivos de informações de subscrição para o servidor web01
       ansible.builtin.synchronize:
         src: "/tmp/subscription_info_{{ inventory_hostname }}.txt"
         dest: "/var/www/html/subscriptions/subscription_info_{{ inventory_hostname }}.txt"
-        delegate_to: web01
+        delegate_to: web01.aroque.com.br
