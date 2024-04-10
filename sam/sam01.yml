@@ -4,7 +4,7 @@
   tasks:
     - name: Coletar informações de subscrição consumida
       ansible.builtin.shell: |
-        subscription-manager list --consumed | egrep 'Product Name:|Product ID:|Version:|Arch:|Status:|Starts:|Ends:'
+        subscription-manager list
       register: subscription_info
       ignore_errors: yes
 
@@ -28,12 +28,3 @@
         src: "/tmp/subscription_info_{{ inventory_hostname }}.txt"
         dest: "./collected_subscriptions/{{ inventory_hostname }}_subscription_info.txt"
         flat: yes
-
-- name: Transferir arquivos de informações de subscrição para o servidor web01
-  hosts: web01.aroque.com.br
-  tasks:
-    - name: Copiar arquivos de subscrição para o servidor web01
-      ansible.builtin.copy:
-        src: "/tmp/subscription_info_{{ hostvars[item].inventory_hostname }}.txt"
-        dest: "/var/www/html/subscriptions/subscription_info_{{ hostvars[item].inventory_hostname }}.txt"
-      loop: "{{ groups['all'] }}"
